@@ -5,7 +5,7 @@ jobs:
     docker:
       - image: hashicorp/terraform:1.0.4
 
-    working_directory: ~/terraform
+    working_directory: https://github.com/AbhiPa83/terraform
 
     steps:
       - checkout
