@@ -1,41 +1,29 @@
 version: 2.1
- 
+
 jobs:
   build:
     docker:
       - image: hashicorp/terraform:1.0.4
+
     working_directory: ~/terraform
- 
+
     steps:
+      - checkout
+
+      # Install any dependencies needed for your Terraform code
+      # - run:
+      #     name: Install Dependencies
+      #     command: |
+      #       apt-get update && apt-get install -y <your-package>
+
       - run:
-          name: Build
-          command: mvn verify
-            # Your build commands here
- 
-   deploy:
-     docker:
-       - image: hashicorp/terraform:1.0.4
- 
-    steps:
+          name: Terraform Init
+          command: terraform init
+
       - run:
-          name: Deploy
-          command: mvn verify
-            # Your deployment commands here
- 
-workflows:
-  version: 2
-  build_and_deploy:
-    jobs:
-      - build
- 
-      - deploy:
-          requires:
-            - build
-          filters:
-            branches:
-              only:
-                - main
- 
+          name: Terraform Plan
+          command: terraform plan -out=tfplan
+
       - hold_approval:
           requires:
             - deploy
@@ -51,3 +39,13 @@ workflows:
                     echo "Deployment not approved. Exiting..."
                     exit 1
                   fi
+            
+      - run:
+          name: Terraform Apply
+          command: terraform apply -auto-approve tfplan
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
