@@ -30,7 +30,7 @@ jobs:
 
       - run:
           name: Terraform Apply
-          command: terraform apply tfplan
+          command: terraform apply -auto-approve tfplan
 
 workflows:
   version: 2
