@@ -24,7 +24,16 @@ jobs:
           name: Terraform Plan
           command: terraform plan -out=tfplan
 
-      - 
+      - build_and_approve:
+        jobs:
+          - build
+          - approval:
+              requires:
+                - build
+            filters:
+                branches:
+                  only:
+                    - main
 
       - run:
           name: Terraform Apply
@@ -35,10 +44,3 @@ workflows:
   build:
     jobs:
       - build
-        - approval:
-            requires:
-              - build
-            filters:
-              branches:
-                only:
-                - main
