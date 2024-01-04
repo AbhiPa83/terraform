@@ -24,6 +24,10 @@ jobs:
           name: Terraform Plan
           command: terraform plan -out=tfplan
 
+      - hold:
+          type: approval
+          reason: "Manual approval required before Terraform apply."
+
       - run:
           name: Terraform Apply
           command: terraform apply tfplan
