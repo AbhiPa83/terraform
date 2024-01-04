@@ -38,8 +38,7 @@ workflows:
 
 workflows:
   version: 2
-    build_and_approve:
-      jobs:
+    jobs:
         - build
         - approval:
             requires:
