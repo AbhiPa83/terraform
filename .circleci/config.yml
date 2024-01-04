@@ -24,9 +24,13 @@ jobs:
           name: Terraform Plan
           command: terraform plan -out=tfplan
 
-      - hold:
-          type: approval
-          reason: "Manual approval required before Terraform apply."
+      - run:
+          name: Check Approval Status
+          command: |
+            if [ -f approval_status.txt ] && grep -q "APPROVAL_REQUIRED=true" approval_status.txt; then
+              echo "Manual approval required. Check the workflow for details.";
+              exit 1;
+            fi
 
       - run:
           name: Terraform Apply
