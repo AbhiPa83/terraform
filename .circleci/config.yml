@@ -53,6 +53,9 @@ workflows:
               only:
                 - main
 
+    steps:
+      - checkout
+      
       - run:
          name: Terraform Apply
          command: terraform apply -auto-approve tfplan 
