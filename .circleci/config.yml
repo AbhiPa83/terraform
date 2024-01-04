@@ -23,26 +23,6 @@ jobs:
           paths:
             - tfplan
 
-  approve:
-    docker:
-      - image: cimg/base:2021.09
-
-    working_directory: ~/terraform
-
-    steps:
-      - attach_workspace:
-          at: ~/terraform
-
-      # Display the Terraform plan for review
-      - run:
-          name: Display Terraform Plan
-          command: terraform show tfplan
-
-      # Use the `hold` command to pause and wait for user approval
-      - hold:
-          type: approval
-          reason: "Manual approval required before Terraform apply."
-
   apply:
     docker:
       - image: hashicorp/terraform:1.0.4
@@ -61,8 +41,15 @@ workflows:
   version: 2
   build_and_apply:
     jobs:
-      - build
-      - approve:
+      - build:
+          filters:
+            branches:
+              only:
+                - main
+      - apply:
           requires:
             - build
-      - apply:
+          filters:
+            branches:
+              only:
+                - main
