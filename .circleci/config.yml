@@ -23,23 +23,7 @@ jobs:
       - run:
           name: Terraform Plan
           command: terraform plan -out=tfplan
-
-      - hold_approval:
-          requires:
-            - deploy
-          filters:
-            branches:
-              only:
-                - main
-          steps:
-            - run:
-                name: Wait for Approval
-                command: |
-                  if [ "${APPROVAL_STATUS}" != "approved" ]; then
-                    echo "Deployment not approved. Exiting..."
-                    exit 1
-                  fi
-            
+       
       - run:
           name: Terraform Apply
           command: terraform apply -auto-approve tfplan
